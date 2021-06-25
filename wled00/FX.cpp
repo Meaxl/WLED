@@ -4101,3 +4101,7 @@ uint16_t WS2812FX::mode_aurora(void) {
   
   return FRAMETIME;
 }
+
+/* uint16_t WS2812FX::mode_flur_wipe(void) {
+
+} */

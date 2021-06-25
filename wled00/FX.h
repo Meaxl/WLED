@@ -112,6 +112,7 @@
 #define IS_SELECTED     ((SEGMENT.options & SELECTED    ) == SELECTED    )
 
 #define MODE_COUNT  118
+// #define MODE_COUNT  119
 
 #define FX_MODE_STATIC                   0
 #define FX_MODE_BLINK                    1
@@ -231,7 +232,7 @@
 #define FX_MODE_BLENDS                 115
 #define FX_MODE_TV_SIMULATOR           116
 #define FX_MODE_DYNAMIC_SMOOTH         117
-
+// #define FX_MODE_FLUR_WIPE              118
 
 class WS2812FX {
   typedef uint16_t (WS2812FX::*mode_ptr)(void);
