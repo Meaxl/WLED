@@ -9,8 +9,8 @@
  * || || ||
  * \/ \/ \/
  */
-#include "../usermods/EXAMPLE_v2/usermod_v2_example.h"
-#include "../usermods/stairway_wipe_basic/stairway-wipe-usermod-v2.h"
+//#include "../usermods/EXAMPLE_v2/usermod_v2_example.h"
+//#include "../usermods/stairway_wipe_basic/stairway-wipe-usermod-v2.h"
 //#include "../usermods/Animated_Staircase/Animated_Staircase.h"
 //#include "../usermods/EXAMPLE_v2/usermod_v2_example.h"
 
@@ -92,9 +92,10 @@ void registerUsermods()
    * || || ||
    * \/ \/ \/
    */
-  usermods.add(new MyExampleUsermod());
-  usermods.add(new StairwayWipeUsermod());
-
+/*
+  * usermods.add(new MyExampleUsermod());
+  * usermods.add(new StairwayWipeUsermod());
+*/
   #ifdef USERMOD_DALLASTEMPERATURE
   usermods.add(new UsermodTemperature());
   #endif
