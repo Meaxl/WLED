@@ -322,6 +322,7 @@ void getSettingsJS(byte subPage, char* dest)
     oappend(";");
 
     sappend('v',SET_F("LC"),ledCount);
+    sappend('c',SET_F("MS"),autoSegments);
 
     for (uint8_t s=0; s < busses.getNumBusses(); s++) {
       Bus* bus = busses.getBus(s);
@@ -396,6 +397,9 @@ void getSettingsJS(byte subPage, char* dest)
   {
     sappend('v',SET_F("UP"),udpPort);
     sappend('v',SET_F("U2"),udpPort2);
+    sappend('v',SET_F("GS"),syncGroups);
+    sappend('v',SET_F("GR"),receiveGroups);
+
     sappend('c',SET_F("RB"),receiveNotificationBrightness);
     sappend('c',SET_F("RC"),receiveNotificationColor);
     sappend('c',SET_F("RX"),receiveNotificationEffects);

@@ -58,6 +58,7 @@
 #define USERMOD_ID_RTC                   15     //Usermod "usermod_rtc.h"
 #define USERMOD_ID_ELEKSTUBE_IPS         16     //Usermod "usermod_elekstube_ips.h"
 #define USERMOD_ID_SN_PHOTORESISTOR      17     //Usermod "usermod_sn_photoresistor.h"
+#define USERMOD_ID_BATTERY_STATUS_BASIC  18     //Usermod "usermod_v2_battery_status_basic.h"
 
 //Access point behavior
 #define AP_BEHAVIOR_BOOT_NO_CONN          0     //Open AP when no connection after boot
@@ -214,6 +215,7 @@
 #define ERR_FS_BEGIN    10  // Could not init filesystem (no partition?)
 #define ERR_FS_QUOTA    11  // The FS is full or the maximum file size is reached
 #define ERR_FS_PLOAD    12  // It was attempted to load a preset that does not exist
+#define ERR_FS_IRLOAD   13  // It was attempted to load an IR JSON cmd, but the "ir.json" file does not exist
 #define ERR_FS_GENERAL  19  // A general unspecified filesystem error occured
 #define ERR_OVERTEMP    30  // An attached temperature sensor has measured above threshold temperature (not implemented)
 #define ERR_OVERCURRENT 31  // An attached current sensor has measured a current above the threshold (not implemented)
@@ -290,7 +292,7 @@
 #ifdef ESP8266
   #define LEDPIN 2    // GPIO2 (D4) on Wemod D1 mini compatible boards
 #else
-  #define LEDPIN 16   // alligns with GPIO2 (D4) on Wemos D1 mini32 compatible boards
+  #define LEDPIN 16   // aligns with GPIO2 (D4) on Wemos D1 mini32 compatible boards
 #endif
 #endif
 

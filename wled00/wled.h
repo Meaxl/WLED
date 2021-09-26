@@ -3,12 +3,12 @@
 /*
    Main sketch, global variable declarations
    @title WLED project sketch
-   @version 0.13.0-b2
+   @version 0.13.0-b3
    @author Christian Schwinne
  */
 
 // version code in format yymmddb (b = daily build)
-#define VERSION 2107230
+#define VERSION 2109220
 
 //uncomment this if you have a "my_config.h" file you'd like to use
 //#define WLED_USE_MY_CONFIG
@@ -267,6 +267,11 @@ WLED_GLOBAL uint16_t ledCount _INIT(DEFAULT_LED_COUNT);   // overcurrent prevent
 WLED_GLOBAL bool turnOnAtBoot _INIT(true);                // turn on LEDs at power-up
 WLED_GLOBAL byte bootPreset   _INIT(0);                   // save preset to load after power-up
 
+//if true, a segment per bus will be created on boot and LED settings save
+//if false, only one segment spanning the total LEDs is created,
+//but not on LED settings save if there is more than one segment currently
+WLED_GLOBAL bool autoSegments _INIT(false);
+
 WLED_GLOBAL byte col[]    _INIT_N(({ 255, 160, 0, 0 }));  // current RGB(W) primary color. col[] should be updated if you want to change the color.
 WLED_GLOBAL byte colSec[] _INIT_N(({ 0, 0, 0, 0 }));      // current RGB(W) secondary color
 WLED_GLOBAL byte briS     _INIT(128);                     // default brightness
@@ -295,6 +300,8 @@ WLED_GLOBAL uint16_t udpPort    _INIT(21324); // WLED notifier default port
 WLED_GLOBAL uint16_t udpPort2   _INIT(65506); // WLED notifier supplemental port
 WLED_GLOBAL uint16_t udpRgbPort _INIT(19446); // Hyperion port
 
+WLED_GLOBAL uint8_t syncGroups    _INIT(0x01);                    // sync groups this instance syncs (bit mapped)
+WLED_GLOBAL uint8_t receiveGroups _INIT(0x01);                    // sync receive groups this instance belongs to (bit mapped)
 WLED_GLOBAL bool receiveNotificationBrightness _INIT(true);       // apply brightness from incoming notifications
 WLED_GLOBAL bool receiveNotificationColor      _INIT(true);       // apply color
 WLED_GLOBAL bool receiveNotificationEffects    _INIT(true);       // apply effects setup
@@ -591,12 +598,6 @@ WLED_GLOBAL bool doInitBusses _INIT(false);
 // Usermod manager
 WLED_GLOBAL UsermodManager usermods _INIT(UsermodManager());
 
-// Status LED
-#if STATUSLED
-  WLED_GLOBAL unsigned long ledStatusLastMillis _INIT(0);
-  WLED_GLOBAL unsigned short ledStatusType _INIT(0); // current status type - corresponds to number of blinks per second
-  WLED_GLOBAL bool ledStatusState _INIT(0); // the current LED state
-#endif
 
 // enable additional debug output
 #ifdef WLED_DEBUG
@@ -660,6 +661,7 @@ public:
 
   void beginStrip();
   void handleConnection();
+  bool initEthernet(); // result is informational
   void initAP(bool resetAP = false);
   void initConnection();
   void initInterfaces();

@@ -2,6 +2,56 @@
 
 ### Builds after release 0.12.0
 
+#### Build 2109220
+
+-   Version bump to 0.13.0-b3 "Toki"
+-   Added segment names (PR #2184)
+-   Improved Police and other effects (PR #2184)
+-   Reverted PR #1902 (Live color correction - will be implemented as usermod) (PR #2175)
+-   Added transitions for segment on/off
+-   Improved number of sparks/stars in Fireworks effect with low number of segments
+-   Fixed segment name edit pencil disappearing with request
+-   Fixed color transition active even if the segment is off
+-   Disallowed file upload with OTA lock active
+-   Fixed analog invert option missing (PR #2219)
+
+#### Build 2109100
+
+-   Added an auto create segments per bus setting
+-   Added 15 new palettes from SR branch (PR #2134)
+-   Fixed segment runtime not reset on FX change via HTTP API
+-   Changed AsyncTCP dependency to pbolduc fork v1.2.0
+
+#### Build 2108250
+
+-   Added Sync groups (PR #2150)
+-   Added JSON API over Serial support
+-   Live color correction (PR #1902)
+
+#### Build 2108180
+
+-   Fixed JSON IR remote not working with codes greater than 0xFFFFFF (fixes #2135)
+-   Fixed transition 0 edge case
+
+#### Build 2108170
+
+-   Added application level pong websockets reply (#2139)
+-   Use AsyncTCP 1.0.3 as it mitigates the flickering issue from 0.13.0-b2
+-   Fixed transition manually updated in preset overriden by field value
+
+#### Build 2108050
+
+-   Fixed undesirable color transition from Orange to boot preset color on first boot
+-   Removed misleading Delete button on new playlist with one entry
+-   Updated NeoPixelBus to 2.6.7 and AsyncTCP to 1.1.1
+
+#### Build 2107230
+
+-   Added skinning (extra custom CSS) (PR #2084)
+-   Added presets/config backup/restore (PR #2084)
+-   Added option for using length instead of Stop LED in UI (PR #2048)
+-   Added custom `holidays.json` holiday list (PR #2048)
+
 #### Build 2107100
 
 -   Version bump to 0.13.0-b2 "Toki"

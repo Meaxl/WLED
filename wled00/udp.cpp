@@ -4,13 +4,14 @@
  * UDP sync notifier / Realtime / Hyperion / TPM2.NET
  */
 
-#define WLEDPACKETSIZE 36
+#define WLEDPACKETSIZE 37
 #define UDP_IN_MAXSIZE 1472
 #define PRESUMED_NETWORK_DELAY 3 //how many ms could it take on avg to reach the receiver? This will be added to transmitted times
 
 void notify(byte callMode, bool followUp)
 {
   if (!udpConnected) return;
+  if (!syncGroups) return;
   switch (callMode)
   {
     case CALL_MODE_INIT:          return;
@@ -39,7 +40,8 @@ void notify(byte callMode, bool followUp)
   //0: old 1: supports white 2: supports secondary color
   //3: supports FX intensity, 24 byte packet 4: supports transitionDelay 5: sup palette
   //6: supports timebase syncing, 29 byte packet 7: supports tertiary color 8: supports sys time sync, 36 byte packet
-  udpOut[11] = 8; 
+  //9: supports sync groups, 37 byte packet
+  udpOut[11] = 9; 
   udpOut[12] = colSec[0];
   udpOut[13] = colSec[1];
   udpOut[14] = colSec[2];
@@ -72,6 +74,9 @@ void notify(byte callMode, bool followUp)
   uint16_t ms = tm.ms;
   udpOut[34] = (ms >> 8) & 0xFF;
   udpOut[35] = (ms >> 0) & 0xFF;
+
+  //sync groups
+  udpOut[36] = syncGroups;
   
   IPAddress broadcastIp;
   broadcastIp = ~uint32_t(Network.subnetMask()) | uint32_t(Network.gatewayIP());
@@ -115,6 +120,8 @@ void sendTPM2Ack() {
 
 void handleNotifications()
 {
+  IPAddress localIP;
+
   //send second notification if enabled
   if(udpConnected && notificationTwoRequired && millis()-notificationSentTime > 250){
     notify(notificationSentCallMode,true);
@@ -161,7 +168,6 @@ void handleNotifications()
       for (uint16_t i = 0; i < packetSize -2; i += 3)
       {
         setRealtimePixel(id, lbuf[i], lbuf[i+1], lbuf[i+2], 0);
-        
         id++; if (id >= ledCount) break;
       }
       strip.show();
@@ -171,9 +177,10 @@ void handleNotifications()
 
   if (!(receiveNotifications || receiveDirect)) return;
   
+  localIP = Network.localIP();
   //notifier and UDP realtime
   if (!packetSize || packetSize > UDP_IN_MAXSIZE) return;
-  if (!isSupp && notifierUdp.remoteIP() == Network.localIP()) return; //don't process broadcasts we send ourselves
+  if (!isSupp && notifierUdp.remoteIP() == localIP) return; //don't process broadcasts we send ourselves
 
   uint8_t udpIn[packetSize +1];
   uint16_t len;
@@ -182,7 +189,7 @@ void handleNotifications()
 
   // WLED nodes info notifications
   if (isSupp && udpIn[0] == 255 && udpIn[1] == 1 && len >= 40) {
-    if (!nodeListEnabled || notifier2Udp.remoteIP() == Network.localIP()) return;
+    if (!nodeListEnabled || notifier2Udp.remoteIP() == localIP) return;
 
     uint8_t unit = udpIn[39];
     NodesMap::iterator it = Nodes.find(unit);
@@ -220,6 +227,12 @@ void handleNotifications()
 
     //compatibilityVersionByte: 
     byte version = udpIn[11];
+
+    // if we are not part of any sync group ignore message
+    if (version < 9 || version > 199) {
+      // legacy senders are treated as if sending in sync group 1 only
+      if (!(receiveGroups & 0x01)) return;
+    } else if (!(receiveGroups & udpIn[36])) return;
     
     bool someSel = (receiveNotificationBrightness || receiveNotificationColor || receiveNotificationEffects);
     //apply colors from notification
@@ -264,7 +277,7 @@ void handleNotifications()
     }
 
     //adjust system time, but only if sender is more accurate than self
-    if (version > 7)
+    if (version > 7 && version < 200)
     {
       Toki::Time tm;
       tm.sec = (udpIn[30] << 24) | (udpIn[31] << 16) | (udpIn[32] << 8) | (udpIn[33]);
@@ -385,7 +398,7 @@ void handleNotifications()
       uint16_t id = ((udpIn[3] << 0) & 0xFF) + ((udpIn[2] << 8) & 0xFF00);
       for (uint16_t i = 4; i < packetSize -2; i += 3)
       {
-          if (id >= ledCount) break;
+        if (id >= ledCount) break;
         setRealtimePixel(id, udpIn[i], udpIn[i+1], udpIn[i+2], 0);
         id++;
       }
@@ -394,7 +407,7 @@ void handleNotifications()
       uint16_t id = ((udpIn[3] << 0) & 0xFF) + ((udpIn[2] << 8) & 0xFF00);
       for (uint16_t i = 4; i < packetSize -2; i += 4)
       {
-          if (id >= ledCount) break;
+        if (id >= ledCount) break;
         setRealtimePixel(id, udpIn[i], udpIn[i+1], udpIn[i+2], udpIn[i+3]);
         id++;
       }
