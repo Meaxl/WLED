@@ -620,7 +620,7 @@ class WS2812FX {
     }
 
     void
-      finalizeInit(uint16_t countPixels),
+      finalizeInit(),
       service(void),
       blur(uint8_t),
       fill(uint32_t),
@@ -637,7 +637,8 @@ class WS2812FX {
       trigger(void),
       setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t grouping = 0, uint8_t spacing = 0),
       resetSegments(),
-      populateDefaultSegments(),
+      makeAutoSegments(),
+      fixInvalidSegments(),
       setPixelColor(uint16_t n, uint32_t c),
       setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0),
       show(void),
@@ -651,6 +652,7 @@ class WS2812FX {
       gammaCorrectCol = true,
       applyToAllSelected = true,
       setEffectConfig(uint8_t m, uint8_t s, uint8_t i, uint8_t p),
+      checkSegmentAlignment(void),
       // return true if the strip is being sent pixel updates
       isUpdating(void);
 
@@ -681,6 +683,8 @@ class WS2812FX {
       ablMilliampsMax,
       currentMilliamps,
       triwave16(uint16_t),
+      getLengthTotal(void),
+      getLengthPhysical(void),
       getFps();
 
     uint32_t
@@ -840,9 +844,6 @@ class WS2812FX {
 
     uint16_t _cumulativeFps = 2;
 
-    void load_gradient_palette(uint8_t);
-    void handle_palette(void);
-
     bool
       _triggered;
 
@@ -876,7 +877,10 @@ class WS2812FX {
 
     void
       blendPixelColor(uint16_t n, uint32_t color, uint8_t blend),
-      startTransition(uint8_t oldBri, uint32_t oldCol, uint16_t dur, uint8_t segn, uint8_t slot);
+      startTransition(uint8_t oldBri, uint32_t oldCol, uint16_t dur, uint8_t segn, uint8_t slot),
+      estimateCurrentAndLimitBri(void),
+      load_gradient_palette(uint8_t),
+      handle_palette(void);
 
     uint16_t* customMappingTable = nullptr;
     uint16_t  customMappingSize  = 0;
