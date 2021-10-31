@@ -9,8 +9,10 @@
  * || || ||
  * \/ \/ \/
  */
-#include "../usermods/EXAMPLE_v2/usermod_v2_example.h"
 #include "../usermods/stairway_wipe_basic/stairway-wipe-usermod-v2.h"
+//#include "../usermods/SN_Photoresistor/usermod_sn_photoresistor.h"
+//#include "../usermods/EXAMPLE_v2/usermod_v2_example.h"
+//#include "../usermods/wipe_mod/wipe_mod.h"
 //#include "../usermods/Animated_Staircase/Animated_Staircase.h"
 //#include "../usermods/EXAMPLE_v2/usermod_v2_example.h"
 
@@ -96,8 +98,11 @@ void registerUsermods()
    * || || ||
    * \/ \/ \/
    */
-  usermods.add(new MyExampleUsermod());
   usermods.add(new StairwayWipeUsermod());
+  //usermods.add(new Usermod_SN_Photoresistor());
+  //usermods.add(new MyExampleUsermod());
+  //usermods.add(new Animated_Staircase());
+  //usermods.add(new WipeMod());
 
   #ifdef USERMOD_BATTERY_STATUS_BASIC
   usermods.add(new UsermodBatteryBasic());
@@ -148,9 +153,9 @@ void registerUsermods()
   usermods.add(new UsermodVL53L0XGestures());
   #endif
 
-  #ifdef USERMOD_ANIMATED_STAIRCASE
-  usermods.add(new Animated_Staircase());
-  #endif
+  // #ifdef USERMOD_ANIMATED_STAIRCASE
+  // usermods.add(new Animated_Staircase());
+  // #endif
 
   #ifdef USERMOD_MULTI_RELAY
   usermods.add(new MultiRelay());

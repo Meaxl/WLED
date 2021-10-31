@@ -3,9 +3,9 @@
 /*
  * Usermods allow you to add own functionality to WLED more easily
  * See: https://github.com/Aircoookie/WLED/wiki/Add-own-functionality
- * 
+ *
  * This is Stairway-Wipe as a v2 usermod.
- * 
+ *
  * Using this usermod:
  * 1. Copy the usermod into the sketch folder (same folder as wled00.ino)
  * 2. Register the usermod by adding #include "stairway-wipe-usermod-v2.h" in the top and registerUsermod(new StairwayWipeUsermod()) in the bottom of usermods_list.cpp
@@ -33,7 +33,7 @@ class StairwayWipeUsermod : public Usermod {
   {
     if ((previousUserVar0 == 1 && userVar0 == 2) || (previousUserVar0 == 2 && userVar0 == 1)) wipeState = 3; //turn off if other PIR triggered
     previousUserVar0 = userVar0;
-    
+
     if (wipeState == 0) {
       startWipe();
       wipeState = 1;
@@ -84,7 +84,7 @@ class StairwayWipeUsermod : public Usermod {
 
     uint16_t getId()
     {
-      return USERMOD_ID_EXAMPLE;
+      return USERMOD_STAIRWAY_WIPE_BASIC;
     }
 
 
